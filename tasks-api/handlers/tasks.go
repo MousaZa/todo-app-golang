@@ -51,3 +51,22 @@ func (h *TaskHandler) AddTask(rw http.ResponseWriter, r *http.Request) {
 	data.AddTask(&t)
 	rw.Write([]byte("Task Added Successfully\n"))
 }
+
+func (h *TaskHandler) UpdateTask(rw http.ResponseWriter, r *http.Request) {
+	var t = data.Task{}
+	id, err := strconv.Atoi(mux.Vars(r)["id"])
+	if err != nil {
+		h.l.Error("Error Getting Id", "error", err)
+		http.Error(rw, "Wrong Id format", http.StatusBadRequest)
+	}
+	err = json.NewDecoder(r.Body).Decode(&t)
+	if err != nil {
+		h.l.Error("Error Decoding Tasks", "error", err)
+		http.Error(rw, "Unable to Decode json", http.StatusBadRequest)
+	}
+	err = data.UpdateTask(id, &t)
+	if err != nil {
+		h.l.Error("Task with Id not found", "error", err)
+		http.Error(rw, "Task with Id not found", http.StatusInternalServerError)
+	}
+}

@@ -19,6 +19,8 @@ func main() {
 
 	sm.HandleFunc("/tasks", h.AddTask).Methods(http.MethodPost)
 
+	sm.HandleFunc("/tasks/{id:[0-9]+}", h.UpdateTask).Methods(http.MethodPut)
+
 	err := http.ListenAndServe(":9091", sm)
 	if err != nil {
 		l.Error("Error starting Service", "error", err)

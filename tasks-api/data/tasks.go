@@ -21,7 +21,7 @@ func ListTasks() Tasks {
 	return TasksList
 }
 func ListSingleTask(id int) (*Task, error) {
-	index, err := FindTaskById(id)
+	_, index, err := FindTaskById(id)
 	if err != nil {
 		return nil, err
 	}
@@ -35,17 +35,27 @@ func AddTask(t *Task) {
 	TasksList = append(TasksList, t)
 }
 
+func UpdateTask(id int, t *Task) error {
+	_, i, err := FindTaskById(id)
+	if err != nil {
+		return err
+	}
+	t.Id = id
+	TasksList[i] = t
+	return nil
+}
+
 func getNextId() int {
 	return TasksList[len(TasksList)-1].Id + 1
 }
 
-func FindTaskById(id int) (int, error) {
+func FindTaskById(id int) (*Task, int, error) {
 	for i, t := range TasksList {
 		if t.Id == id {
-			return i, nil
+			return t, i, nil
 		}
 	}
-	return -1, errors.New("unable to find task with this id")
+	return &Task{}, -1, errors.New("unable to find task with this id")
 }
 
 var TasksList = Tasks{
