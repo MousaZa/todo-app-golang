@@ -27,6 +27,18 @@ func ListSingleTask(id int) (*Task, error) {
 	}
 	return TasksList[index], nil
 }
+
+func AddTask(t *Task) {
+	t.Id = getNextId()
+	t.AddedOn = time.Now()
+	t.IsDone = false
+	TasksList = append(TasksList, t)
+}
+
+func getNextId() int {
+	return TasksList[len(TasksList)-1].Id + 1
+}
+
 func FindTaskById(id int) (int, error) {
 	for i, t := range TasksList {
 		if t.Id == id {

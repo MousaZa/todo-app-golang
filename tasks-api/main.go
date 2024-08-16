@@ -14,10 +14,12 @@ func main() {
 
 	sm := mux.NewRouter()
 
-	sm.HandleFunc("/tasks", h.ListTasks)
-	sm.HandleFunc("/tasks/{id:[0-9]+}", h.ListSingleTask)
+	sm.HandleFunc("/tasks", h.ListTasks).Methods(http.MethodGet)
+	sm.HandleFunc("/tasks/{id:[0-9]+}", h.ListSingleTask).Methods(http.MethodGet)
 
-	err := http.ListenAndServe(":9090", sm)
+	sm.HandleFunc("/tasks", h.AddTask).Methods(http.MethodPost)
+
+	err := http.ListenAndServe(":9091", sm)
 	if err != nil {
 		l.Error("Error starting Service", "error", err)
 	}
