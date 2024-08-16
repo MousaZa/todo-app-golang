@@ -70,3 +70,16 @@ func (h *TaskHandler) UpdateTask(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, "Task with Id not found", http.StatusInternalServerError)
 	}
 }
+
+func (h *TaskHandler) DeleteTask(rw http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(mux.Vars(r)["id"])
+	if err != nil {
+		h.l.Error("Error Getting Id", "error", err)
+		http.Error(rw, "Wrong Id format", http.StatusBadRequest)
+	}
+	err = data.DeleteTask(id)
+	if err != nil {
+		h.l.Error("Task with Id not found", "error", err)
+		http.Error(rw, "Task with Id not found", http.StatusInternalServerError)
+	}
+}

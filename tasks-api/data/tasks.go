@@ -45,6 +45,15 @@ func UpdateTask(id int, t *Task) error {
 	return nil
 }
 
+func DeleteTask(id int) error {
+	_, i, err := FindTaskById(id)
+	if err != nil {
+		return err
+	}
+	TasksList = append(TasksList[:i], TasksList[i+1:]...)
+	return nil
+}
+
 func getNextId() int {
 	return TasksList[len(TasksList)-1].Id + 1
 }

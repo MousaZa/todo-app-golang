@@ -18,21 +18,27 @@ func main() {
 
 	sm := mux.NewRouter()
 
-	sm.HandleFunc("/tasks", h.ListTasks).Methods(http.MethodGet)
-	sm.HandleFunc("/tasks/{id:[0-9]+}", h.ListSingleTask).Methods(http.MethodGet)
+	getR := sm.Methods(http.MethodGet).Subrouter()
+	getR.HandleFunc("/tasks", h.ListTasks)
+	getR.HandleFunc("/tasks/{id:[0-9]+}", h.ListSingleTask)
 
-	sm.HandleFunc("/tasks", h.AddTask).Methods(http.MethodPost)
+	postR := sm.Methods(http.MethodPost).Subrouter()
+	postR.HandleFunc("/tasks", h.AddTask)
 
-	sm.HandleFunc("/tasks/{id:[0-9]+}", h.UpdateTask).Methods(http.MethodPut)
+	putR := sm.Methods(http.MethodPut).Subrouter()
+	putR.HandleFunc("/tasks/{id:[0-9]+}", h.UpdateTask)
+
+	deleteR := sm.Methods(http.MethodDelete).Subrouter()
+	deleteR.HandleFunc("/tasks/{id:[0-9]+}", h.DeleteTask)
 
 	s := http.Server{
-		Addr:         ":9090",
+		Addr:         ":9092",
 		Handler:      sm,
 		IdleTimeout:  30 * time.Second,
 		ReadTimeout:  30 * time.Second,
 		WriteTimeout: 30 * time.Second,
 	}
-	
+
 	go func() {
 		err := s.ListenAndServe()
 		if err != nil {
