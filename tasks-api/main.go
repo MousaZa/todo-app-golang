@@ -1,0 +1,25 @@
+package main
+
+import (
+	"github.com/MousaZa/todo-app/tasks-api/handlers"
+	"github.com/gorilla/mux"
+	"github.com/hashicorp/go-hclog"
+	"net/http"
+)
+
+func main() {
+
+	l := hclog.New(&hclog.LoggerOptions{Name: "tasks-api", Level: hclog.LevelFromString("DEBUG")})
+	h := handlers.NewTaskHandler(l)
+
+	sm := mux.NewRouter()
+
+	sm.HandleFunc("/tasks", h.ListTasks)
+	sm.HandleFunc("/tasks/{id:[0-9]+}", h.ListSingleTask)
+
+	err := http.ListenAndServe(":9090", sm)
+	if err != nil {
+		l.Error("Error starting Service", "error", err)
+	}
+
+}
