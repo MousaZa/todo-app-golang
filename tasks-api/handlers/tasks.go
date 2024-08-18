@@ -10,15 +10,16 @@ import (
 )
 
 type TaskHandler struct {
-	l hclog.Logger
+	l  hclog.Logger
+	dh *data.Handler
 }
 
-func NewTaskHandler(l hclog.Logger) *TaskHandler {
-	return &TaskHandler{l: l}
+func NewTaskHandler(l hclog.Logger, dh *data.Handler) *TaskHandler {
+	return &TaskHandler{l: l, dh: dh}
 }
 
 func (h *TaskHandler) ListTasks(rw http.ResponseWriter, _ *http.Request) {
-	t := data.ListTasks()
+	t := h.dh.ListTasks()
 	err := json.NewEncoder(rw).Encode(t)
 	if err != nil {
 		h.l.Error("Error Encoding Tasks", "error", err)
@@ -27,7 +28,7 @@ func (h *TaskHandler) ListTasks(rw http.ResponseWriter, _ *http.Request) {
 
 func (h *TaskHandler) ListSingleTask(rw http.ResponseWriter, r *http.Request) {
 	id, _ := strconv.Atoi(mux.Vars(r)["id"])
-	t, err := data.ListSingleTask(id)
+	t, err := h.dh.ListSingleTask(id)
 	if err != nil {
 		h.l.Error("Error Finding task", "id", id, "error", err)
 		http.Error(rw, "Error Finding task", http.StatusNotFound)
@@ -48,7 +49,7 @@ func (h *TaskHandler) AddTask(rw http.ResponseWriter, r *http.Request) {
 		h.l.Error("Error Decoding Tasks", "error", err)
 		http.Error(rw, "Unable to Decode json", http.StatusBadRequest)
 	}
-	data.AddTask(&t)
+	h.dh.AddTask(&t)
 	rw.Write([]byte("Task Added Successfully\n"))
 }
 
@@ -64,7 +65,7 @@ func (h *TaskHandler) UpdateTask(rw http.ResponseWriter, r *http.Request) {
 		h.l.Error("Error Decoding Tasks", "error", err)
 		http.Error(rw, "Unable to Decode json", http.StatusBadRequest)
 	}
-	err = data.UpdateTask(id, &t)
+	err = h.dh.UpdateTask(id, &t)
 	if err != nil {
 		h.l.Error("Task with Id not found", "error", err)
 		http.Error(rw, "Task with Id not found", http.StatusInternalServerError)
@@ -77,7 +78,7 @@ func (h *TaskHandler) DeleteTask(rw http.ResponseWriter, r *http.Request) {
 		h.l.Error("Error Getting Id", "error", err)
 		http.Error(rw, "Wrong Id format", http.StatusBadRequest)
 	}
-	err = data.DeleteTask(id)
+	err = h.dh.DeleteTask(id)
 	if err != nil {
 		h.l.Error("Task with Id not found", "error", err)
 		http.Error(rw, "Task with Id not found", http.StatusInternalServerError)

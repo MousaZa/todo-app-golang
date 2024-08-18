@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/MousaZa/todo-app/tasks-api/data"
 	"github.com/MousaZa/todo-app/tasks-api/handlers"
 	"github.com/gorilla/mux"
 	"github.com/hashicorp/go-hclog"
@@ -14,7 +15,8 @@ import (
 func main() {
 
 	l := hclog.New(&hclog.LoggerOptions{Name: "tasks-api", Level: hclog.LevelFromString("DEBUG")})
-	h := handlers.NewTaskHandler(l)
+	dh := data.NewHandler(l)
+	h := handlers.NewTaskHandler(l, dh)
 
 	sm := mux.NewRouter()
 
