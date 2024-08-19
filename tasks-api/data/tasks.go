@@ -24,17 +24,18 @@ type Tasks []*Task
 type Handler struct {
 	l         hclog.Logger
 	TasksList Tasks
+	csvH      *CsvHandler
 }
 
-func NewHandler(l hclog.Logger) *Handler {
+func NewHandler(l hclog.Logger, csvH *CsvHandler) *Handler {
 	var TasksList = Tasks{}
-	return &Handler{l: l, TasksList: TasksList}
+	return &Handler{l: l, TasksList: TasksList, csvH: csvH}
 }
 
 var TasksList1 = Tasks{}
 
 func (d *Handler) ListTasks() Tasks {
-	return d.TasksList
+	return d.csvH.ReadData()
 }
 func (d *Handler) ListSingleTask(id int) (*Task, error) {
 	_, index, err := d.FindTaskById(id)

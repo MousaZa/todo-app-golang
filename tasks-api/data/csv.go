@@ -1,36 +1,35 @@
-package csv
+package data
 
 import (
 	"fmt"
-	"github.com/MousaZa/todo-app/tasks-api/data"
 	"github.com/gocarina/gocsv"
 	"github.com/hashicorp/go-hclog"
 	"os"
 )
 
-type Handler struct {
+type CsvHandler struct {
 	l hclog.Logger
 }
 
-func NewHandler(l hclog.Logger) *Handler {
-	return &Handler{l: l}
+func NewCsvHandler(l hclog.Logger) *CsvHandler {
+	return &CsvHandler{l: l}
 }
 
-func (h *Handler) ReadData() data.Tasks {
-	var TasksList = data.Tasks{}
+func (h *CsvHandler) ReadData() Tasks {
+	var TasksList = Tasks{}
 	fmt.Println("sss")
-	file, err := os.Open("csv/tasks.csv")
+	file, err := os.Open("data/csv/tasks.csv")
 	if err != nil {
 		panic(err)
 	}
+
+	err = gocsv.UnmarshalFile(file, &TasksList)
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
 
 		}
 	}(file)
-
-	err = gocsv.UnmarshalFile(file, &TasksList)
 	if err != nil {
 		fmt.Println(err)
 	}

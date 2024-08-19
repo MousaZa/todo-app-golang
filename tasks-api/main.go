@@ -15,7 +15,8 @@ import (
 func main() {
 
 	l := hclog.New(&hclog.LoggerOptions{Name: "tasks-api", Level: hclog.LevelFromString("DEBUG")})
-	dh := data.NewHandler(l)
+	csvH := data.NewCsvHandler(l)
+	dh := data.NewHandler(l, csvH)
 	h := handlers.NewTaskHandler(l, dh)
 
 	sm := mux.NewRouter()
