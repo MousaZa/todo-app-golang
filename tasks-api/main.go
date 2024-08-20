@@ -13,7 +13,6 @@ import (
 )
 
 func main() {
-
 	l := hclog.New(&hclog.LoggerOptions{Name: "tasks-api", Level: hclog.LevelFromString("DEBUG")})
 	csvH := data.NewCsvHandler(l)
 	dh := data.NewHandler(l, csvH)
