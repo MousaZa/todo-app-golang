@@ -67,14 +67,10 @@ func (d *Handler) UpdateTask(id string, t *Task) error {
 	return nil
 }
 
-//	func (d *Handler) DeleteTask(id int) error {
-//		_, i, err := d.FindTaskById(tasks,id)
-//		if err != nil {
-//			return err
-//		}
-//		d.TasksList = append(d.TasksList[:i], d.TasksList[i+1:]...)
-//		return nil
-//	}
+func (d *Handler) DeleteTask(id string) error {
+	d.csvH.DeleteTask(id)
+	return nil
+}
 func (d *Handler) getNextId(t Tasks) int {
 	return t[len(t)-1].Id + 1
 }
