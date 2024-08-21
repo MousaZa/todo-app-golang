@@ -5,22 +5,34 @@ package cmd
 
 import (
 	"fmt"
-
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
+	"net/http"
 )
 
 // deleteCmd represents the delete command
 var deleteCmd = &cobra.Command{
 	Use:   "delete",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Deletes a task with specific id",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("delete called")
+		url := "http://localhost:9092/tasks/" + args[0]
+		req, err := http.NewRequest(http.MethodDelete, url, nil)
+		if err != nil {
+			fmt.Printf("err :%v\n", err)
+			return
+		}
+		res, err := http.DefaultClient.Do(req)
+		if err != nil {
+			fmt.Printf("err :%v\n", err)
+			return
+		}
+		if res.StatusCode == http.StatusOK {
+			c := color.New(color.FgCyan)
+			c.Printf("Task with id: %v deleted successfuly\n", args[0])
+		} else {
+			r := color.New(color.FgRed)
+			r.Printf("Task with id: %v not found\n", args[0])
+		}
 	},
 }
 

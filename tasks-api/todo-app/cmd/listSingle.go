@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/MousaZa/todo-app/tasks-api/todo-app/data"
+	"github.com/fatih/color"
 	"github.com/tidwall/pretty"
 	"io"
 	"net/http"
@@ -31,6 +32,11 @@ var listSingleCmd = &cobra.Command{
 			return
 		}
 		//body, err := io.ReadAll(res.Body)
+		if res.StatusCode != http.StatusOK {
+			r := color.New(color.FgRed)
+			r.Printf("Task with id: %v not found\n", args[0])
+			return
+		}
 		if Debug {
 			body, err := io.ReadAll(res.Body)
 			if err != nil {

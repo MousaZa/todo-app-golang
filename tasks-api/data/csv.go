@@ -144,10 +144,11 @@ func (h *CsvHandler) DeleteTask(id string) error {
 			index = i
 		}
 	}
+	h.l.Debug("index", index)
 	if index == -1 {
 		return errors.New("task with id not found")
 	}
-
+	h.l.Debug("index", index)
 	rows = append(rows[:index], rows[index+1:]...)
 	if err := os.Truncate("data/csv/tasks.csv", 0); err != nil {
 		log.Printf("Failed to truncate: %v", err)
