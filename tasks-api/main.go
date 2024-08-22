@@ -26,6 +26,7 @@ func main() {
 
 	postR := sm.Methods(http.MethodPost).Subrouter()
 	postR.HandleFunc("/tasks", h.AddTask)
+	postR.HandleFunc("/tasks/{id:[0-9]+}", h.CheckTask)
 
 	putR := sm.Methods(http.MethodPut).Subrouter()
 	putR.HandleFunc("/tasks/{id:[0-9]+}", h.UpdateTask)

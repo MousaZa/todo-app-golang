@@ -1,5 +1,5 @@
 /*
-Copyright © 2024 NAME HERE <EMAIL ADDRESS>
+Copyright © 2024 Mousa Zeydan <mous.zeydan@gmail.com>
 */
 package cmd
 
@@ -50,22 +50,9 @@ var listSingleCmd = &cobra.Command{
 
 			t.PrintTask(Verbose)
 		}
-		/*result := pretty.Pretty(body)
-		fmt.Printf("Task :%s\n", result)*/
-
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(listSingleCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// listSingleCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// listSingleCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

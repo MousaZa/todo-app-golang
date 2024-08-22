@@ -80,3 +80,12 @@ func (h *TaskHandler) DeleteTask(rw http.ResponseWriter, r *http.Request) {
 		h.l.Error("Task with Id not found", "error", err)
 	}
 }
+
+func (h *TaskHandler) CheckTask(rw http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
+	err := h.dh.CheckTask(id)
+	if err != nil {
+		http.Error(rw, "Task with Id not found", http.StatusInternalServerError)
+		h.l.Error("Task with Id not found", "error", err)
+	}
+}

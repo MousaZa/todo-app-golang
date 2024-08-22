@@ -74,6 +74,13 @@ func (d *Handler) DeleteTask(id string) error {
 	}
 	return nil
 }
+func (d *Handler) CheckTask(id string) error {
+	err := d.csvH.CheckTask(id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 func (d *Handler) getNextId(t Tasks) int {
 	return t[len(t)-1].Id + 1
 }

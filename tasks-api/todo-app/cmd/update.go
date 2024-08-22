@@ -1,26 +1,48 @@
 /*
-Copyright © 2024 NAME HERE <EMAIL ADDRESS>
+Copyright © 2024 Mousa Zeydan <mous.zeydan@gmail.com>
 */
 package cmd
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
-
+	"github.com/MousaZa/todo-app/tasks-api/todo-app/data"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
+	"net/http"
 )
 
 // updateCmd represents the update command
 var updateCmd = &cobra.Command{
 	Use:   "update",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Updates the task with the specified id",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("update called")
+		t := data.Task{Title: args[1], Description: args[2]}
+		j, err := json.Marshal(t)
+		if err != nil {
+			fmt.Printf("err :%v\n", err)
+			return
+		}
+		r := bytes.NewReader(j)
+		url := "http://localhost:9092/tasks/" + args[0]
+		req, err := http.NewRequest(http.MethodPut, url, r)
+		if err != nil {
+			fmt.Printf("err :%v\n", err)
+			return
+		}
+		res, err := http.DefaultClient.Do(req)
+		if err != nil {
+			fmt.Printf("err :%v\n", err)
+			return
+		}
+		if res.StatusCode == http.StatusOK {
+			c := color.New(color.FgCyan)
+			c.Printf("Task was updated successfuly\n")
+		} else {
+			r := color.New(color.FgRed)
+			r.Printf("Error updating task, code: %v\n", res.StatusCode)
+		}
 	},
 }
 
